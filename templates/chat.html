@@ -3,25 +3,91 @@
 <head>
     <title>Forensic LLM Chat</title>
     <style>
-        body { font-family: Arial; margin: 40px; }
-        #chat-box { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; }
-        .user { color: blue; margin-bottom: 5px; }
-        .bot { color: green; margin-bottom: 15px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #000;
+            color: #fff;
+        }
+
+        h2 {
+            color: #FFD700;
+        }
+
+        #chat-box {
+            border: 1px solid #444;
+            padding: 10px;
+            height: 500px;
+            overflow-y: scroll;
+            background-color: #111;
+        }
+
+        .user {
+            color: #87CEFA;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .llm-response {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-family: Consolas, monospace;
+            white-space: pre-wrap;
+            border-radius: 6px;
+            color: #eee;
+        }
+
+        .llm-response .section {
+            margin-bottom: 10px;
+        }
+
+        .llm-response strong {
+            color: #FFD700;
+            font-size: 1.05rem;
+        }
+
+        .llm-response ul {
+            padding-left: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            background-color: #111;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #FFD700;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #ffa500;
+        }
     </style>
 </head>
 <body>
     <h2>Chat with Foundation-sec-8B</h2>
     <div id="chat-box"></div>
-    <textarea id="user-input" rows="4" cols="80" placeholder="Ask something..."></textarea><br>
+    <textarea id="user-input" rows="4" placeholder="Ask something..."></textarea><br>
     <button onclick="sendMessage()">Send</button>
 
     <script>
         async function sendMessage() {
-            const input = document.getElementById("user-input").value;
+            const input = document.getElementById("user-input").value.trim();
             if (!input) return;
 
             const chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML += `<div class='user'><strong>You:</strong> ${input}</div>`;
+            chatBox.innerHTML += `<div class='user'>You: ${input}</div>`;
             document.getElementById("user-input").value = "";
 
             const res = await fetch("/ask", {
@@ -29,9 +95,23 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ prompt: input })
             });
+
             const data = await res.json();
-            chatBox.innerHTML += `<div class='bot'><strong>LLM:</strong> ${data.response}</div>`;
+
+            // Try to auto-format known sections if they exist
+            const formatted = formatLLMResponse(data.response);
+            chatBox.innerHTML += `<div class='llm-response'>${formatted}</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function formatLLMResponse(text) {
+            // Simple format boost for known section titles
+            const sections = ["Suspicious Activity Details", "Threat Correlation", "Recommendation", "Risk", "Findings"];
+            for (const section of sections) {
+                const regex = new RegExp(`(?<=\\n|^)\\s*-?\\s*${section}\\s*:?`, "gi");
+                text = text.replace(regex, `\n\n<strong>🔍 ${section}:</strong>`);
+            }
+            return text;
         }
     </script>
 </body>
