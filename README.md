@@ -1,6 +1,9 @@
 # Foundation-sec-8B Web Chat Interface
 
-This project provides a simple web-based frontend using **Flask** and **HTML** to interact with a locally hosted **Foundation-sec-8B** security LLM via the [vLLM OpenAI-compatible API server](https://github.com/vllm-project/vllm).
+This project provides a simple web-based frontend using **Flask** and **HTML** to interact with a locally hosted [**Foundation-sec-8B**](https://huggingface.co/fdtn-ai/Foundation-Sec-8B) security LLM via the [vLLM OpenAI-compatible API server](https://github.com/vllm-project/vllm).
+
+<img width="1429" alt="image" src="https://github.com/user-attachments/assets/b1348981-0d51-4005-b082-d4199991bffa" />
+
 
 ## Features
 
