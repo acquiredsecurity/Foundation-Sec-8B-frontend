@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forensic LLM Chat</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        #chat-box { border: 1px solid #ccc; padding: 10px; height: 400px; overflow-y: scroll; }
+        .user { color: blue; margin-bottom: 5px; }
+        .bot { color: green; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <h2>Chat with Foundation-sec-8B</h2>
+    <div id="chat-box"></div>
+    <textarea id="user-input" rows="4" cols="80" placeholder="Ask something..."></textarea><br>
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("user-input").value;
+            if (!input) return;
+
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<div class='user'><strong>You:</strong> ${input}</div>`;
+            document.getElementById("user-input").value = "";
+
+            const res = await fetch("/ask", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt: input })
+            });
+            const data = await res.json();
+            chatBox.innerHTML += `<div class='bot'><strong>LLM:</strong> ${data.response}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+</body>
+</html>
