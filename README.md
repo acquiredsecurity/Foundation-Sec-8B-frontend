@@ -7,7 +7,7 @@ This project provides a simple web-based frontend using **Flask** and **HTML** t
 
 ## Features
 
-- Secure and local forensic chat assistant
+- Easily prompt Foundation Sec 8B chat assistant when running it locally via web ui
 - HTML-based frontend with a prompt box and response display
 - Queries `Foundation-sec-8B` through vLLM’s `/v1/completions` endpoint
 - Designed for analyst-style interactions (forensics, threat detection, incident response)
